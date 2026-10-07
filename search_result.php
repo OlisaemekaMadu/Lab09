@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title> Cars HTML Table</title>
+    <title> Cars Model HTML Table</title>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="keywords" content="HTML5">
@@ -10,15 +10,15 @@
 
 <body>
     <?php 
-        // References our settings.php to access our configurations.
         require_once('settings.php');
         $db_con = mysqli_connect("localhost", "root", "", "exhibition_ db");
-        if ($db_con) // When our database is found.
+        $model_entered = mysqli_real_escape_string($db_con, $_GET['model']);
+
+        if (isset($model_entered))
         {
-            // Recieves data from our database.
-            $sql = "SELECT * FROM cars";
-            // Retrieves all the data from our table.
+            $sql = "SELECT * FROM cars WHERE model = '$model_entered';";
             $result = mysqli_query($db_con, $sql);
+
             if (mysqli_num_rows($result) > 0) 
             {
                 echo "<table border='1' cellpadding='5'>";
@@ -36,14 +36,13 @@
             }
             else
             {
-               echo "<p>There are no records.</p>";
+                echo "🚫 No matching cars found. <a href='search_form.php'>Try Again</a>";
             }
-
             mysqli_close($db_con);
         }
-        else // Our database is not connected.
+        else
         {
-            die("Unable to connect to the db." . mysqli_connect_error());
+            echo "Invalid login. <a href='search_form.php'>Please enter a model to search.</a>";
         }
 
     ?>
